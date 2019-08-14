@@ -25,18 +25,17 @@ router.post('/', auth, async (req, res) => {
 	// Get id from token in headers
 	const _id = req.user.id
 	const userData = await User.findById({ _id }) 
-	const newTodo = req.body
+	const todos = req.body
 
-	if(!newTodo.name) return res.json({ msg: 'Todo tidak boleh kosong' })
+	if(!todos.name) return res.json({ msg: 'Todo tidak boleh kosong' })
 
 	// Check if todo is exists
-	const todoExists = userData.todos.find(todo => todo.name === newTodo.name)
+	const todoExists = userData.todos.find(todo => todo.name === todos.name)
 	if(todoExists) return res.status(400).json({ msg: 'Todo sudah ada' })
-
 	try {
 
-		await User.updateOne({ _id }, { $push: { newTodo } } )
-		return res.json({ msg: 'Todo berhasil ditambahkan' })
+		const todoUpdated = await User.findOneAndUpdate({ _id }, { $push: { todos } }, { new: true } ).select('-password')
+		return res.json({ msg: 'Todo berhasil ditambahkan', data: todoUpdated })
 
 	}catch(err) {
 		return res.send(err)
@@ -51,12 +50,28 @@ router.post('/', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
 	// Get id from token in headers
 	const _id = req.user.id
-	const userData = await User.findById({ _id }) 
 
 	try {
+		const todoUpdated = await User.findOneAndUpdate({ _id }, { $pull: { todos: { _id: req.params.id } } }, { new: true } ).select('-password')
+		return res.json({ msg: 'Todo berhasil di hapus', data: todoUpdated })
 
-		await User.updateOne({ _id }, { $pull: { todos: { _id: req.params.id } } } )
-		return res.json({ msg: 'Todo berhasil dihapus' })
+	}catch(err) {
+		return res.send(err)
+	}
+})
+
+/*
+	@route PUT /api/todos/:id
+	@desc Edit a todo
+	@access Private
+*/
+router.put('/:id', auth, async (req, res) => {
+	// Get id from token in headers
+	const _id = req.user.id
+
+	try {
+		const todoUpdated = await User.findOneAndUpdate({ _id, 'todos._id': req.params.id }, { $set: { 'todos.$.name': req.body.name } }, { new: true } ).select('-password')
+		return res.json({ msg: 'Todo berhasil di update', data: todoUpdated })
 
 	}catch(err) {
 		return res.send(err)
