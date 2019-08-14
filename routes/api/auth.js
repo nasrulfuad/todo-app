@@ -11,7 +11,7 @@ const User = require('../../models/User')
 
 /*	
 	@route    POST /api/auth
-	@desc     Auth user
+	@desc     Auth user / Login
 	@access   public
 */
 router.post('/', (req, res) => {
@@ -36,10 +36,7 @@ router.post('/', (req, res) => {
 						{ expiresIn : 3600 },
 						(err, token) => {
 							if(err) throw err
-							res.json({
-								token,
-								user: { id: user.id, name: user.name, email: user.email }
-							})
+							return res.status(202).json({ token, user: { id: user.id, name: user.name, email: user.email } })
 						}
 					)
 				})
@@ -55,6 +52,7 @@ router.post('/', (req, res) => {
 router.get('/user', auth, (req, res) => {
 	User.findById(req.user.id)
 		.select('-password')
-		.then(user => res.json(user))
+		.then(user => res.status(200).json(user))
 })
+
 module.exports = router

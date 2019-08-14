@@ -12,7 +12,7 @@ const User = require('../../models/User')
 	@access Private
 */
 router.get('/', auth, (req, res) => {
-	User.findById(req.user.id).select('-password').then(v => res.json(v))
+	User.findById(req.user.id).select('-password').then(v => res.status(200).json(v.todos))
 })
 
 
@@ -27,7 +27,7 @@ router.post('/', auth, async (req, res) => {
 	const userData = await User.findById({ _id }) 
 	const todos = req.body
 
-	if(!todos.name) return res.json({ msg: 'Todo tidak boleh kosong' })
+	if(!todos.name) return res.status(400).json({ msg: 'Todo tidak boleh kosong' })
 
 	// Check if todo is exists
 	const todoExists = userData.todos.find(todo => todo.name === todos.name)
@@ -35,7 +35,7 @@ router.post('/', auth, async (req, res) => {
 	try {
 
 		const todoUpdated = await User.findOneAndUpdate({ _id }, { $push: { todos } }, { new: true } ).select('-password')
-		return res.json({ msg: 'Todo berhasil ditambahkan', data: todoUpdated })
+		return res.status(202).json({ msg: 'Todo berhasil ditambahkan', data: todoUpdated })
 
 	}catch(err) {
 		return res.send(err)
@@ -53,7 +53,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 	try {
 		const todoUpdated = await User.findOneAndUpdate({ _id }, { $pull: { todos: { _id: req.params.id } } }, { new: true } ).select('-password')
-		return res.json({ msg: 'Todo berhasil di hapus', data: todoUpdated })
+		return res.status(202).json({ msg: 'Todo berhasil di hapus', data: todoUpdated })
 
 	}catch(err) {
 		return res.send(err)
@@ -71,10 +71,10 @@ router.put('/:id', auth, async (req, res) => {
 
 	try {
 		const todoUpdated = await User.findOneAndUpdate({ _id, 'todos._id': req.params.id }, { $set: { 'todos.$.name': req.body.name } }, { new: true } ).select('-password')
-		return res.json({ msg: 'Todo berhasil di update', data: todoUpdated })
+		return res.status(202).json({ msg: 'Todo berhasil di update', data: todoUpdated })
 
-	}catch(err) {
-		return res.send(err)
+	}catch(error) {
+		return res.status(400).json({ error })
 	}
 })
 
