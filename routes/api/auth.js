@@ -23,12 +23,12 @@ router.post('/', (req, res) => {
 	// Check for existing user
 	User.findOne({ email })
 		.then(user => {
-			if(!user) return res.status(400).json({ msg: 'Email belum terdaftar' })
+			if(!user) return res.status(400).json({ msg: 'Email belum terdaftar akhi' })
 
 			// Validate password
 			bcrypt.compare(password, user.password)
 				.then(isMatch => {
-					if(!isMatch) return res.status(400).json({ msg: 'Password salah' })
+					if(!isMatch) return res.status(400).json({ msg: 'Password salah akhi' })
 
 					jwt.sign(
 						{ id: user.id },
@@ -36,7 +36,7 @@ router.post('/', (req, res) => {
 						{ expiresIn : 3600 },
 						(err, token) => {
 							if(err) throw err
-							return res.status(202).json({ token, user: { id: user.id, name: user.name, email: user.email } })
+							return res.status(202).json({ msg: 'Login berhasil akhi, tunngu ya', token, user: { id: user.id, name: user.name, email: user.email } })
 						}
 					)
 				})

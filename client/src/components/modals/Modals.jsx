@@ -13,7 +13,11 @@ export default class Modals extends Component {
     this.toggle = this.toggle.bind(this)
   }
 
-  toggle() {
+  toggle(dashboard, token) {
+    if(dashboard === 'dashboard') {
+      localStorage.setItem('token', token)
+      this.props.isAuthenticated()
+    }
     this.setState(prevState => ({
       modal: !prevState.modal
     }))
@@ -27,7 +31,7 @@ export default class Modals extends Component {
           <ModalHeader toggle={this.toggle}>{this.props.type}</ModalHeader>
           <ModalBody>
             { this.props.type === 'Login' ? (
-              <LoginForm />
+              <LoginForm toggle={this.toggle} />
             ) : (
               <RegisterForm toggle={this.toggle} />
             ) }

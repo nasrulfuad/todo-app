@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Jumbotron, Container } from 'reactstrap'
+import '../App.css'
 import AppNavBar from './AppNavBar'
 
 export default class App extends Component {
+
   render() {
     return (
       <Fragment>

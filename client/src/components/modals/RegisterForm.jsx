@@ -18,16 +18,15 @@ export default class RegisterForm extends Component {
   onChange = e => this.setState({[e.target.name]: e.target.value})
 
   onSubmit = e => {
+    e.preventDefault()
   	const { name, email, password, password2 } = this.state
-  	const that = this
-  	e.preventDefault()
   	if(name === '' || email === '' || password === '' || password2 === '') return this.setState({ error: 'Isi semua kolom akhi' })
   	if(password !== password2) return this.setState({ error: 'Password tidak sama akhi' })
 
 	axios.post('/api/users', { name, email, password })
 		.then(result => {
 			this.setState({error: '', success: result.data.msg})
-			setTimeout(() => that.props.toggle(), 2500)
+			setTimeout(() => this.props.toggle(), 2500)
 		})
 		.catch(err => this.setState({error: err.response.data.msg}))
   }
