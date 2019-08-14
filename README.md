@@ -167,3 +167,93 @@ Todos document :
             {
                 "msg": "Invalid token"
             }
+
+### Create new user todo
+
+<pre>
+@route    POST /api/todos
+@desc     Create a todo
+@access   private
+</pre>
+
++ Response 202 | Todo berhasil di tambahkan
+
++ Response 401 (application/json) | No token available
+
+            {
+                "msg": "No token, authorization denied"
+            }
+
++ Response 400 (application/json) | Token does not match
+
+            {
+                "msg": "Invalid token"
+            }
+
++ Response 400 (application/json) | Todo tidak boleh kosong
+
+            {
+                "msg": "Todo tidak boleh kosong"
+            }
+
++ Response 400 (application/json) | Todo sudah ada
+
+            {
+                "msg": "Todo sudah ada"
+            }
+
++ Response 400 (application/json) | Todo tidak boleh kosong
+
+            {
+                "msg": "Todo tidak boleh kosong"
+            }
+
+### Delete user todo
+
+<pre>
+@route    DELETE /api/todos/:id
+@desc     Delete a todo
+@access   private
+</pre>
+
++ Response 202 | Todo berhasil di hapus
+
++ Response 401 (application/json) | No token available
+
+            {
+                "msg": "No token, authorization denied"
+            }
+
++ Response 400 (application/json) | Token does not match
+
+            {
+                "msg": "Invalid token"
+            }
+
+### Edit user todo
+
+<pre>
+@route    PUT /api/todos/:id
+@desc     Edit a todo
+@access   private
+</pre>
+
++ Response 202 | Todo berhasil di update
+
++ Response 401 (application/json) | No token available
+
+            {
+                "msg": "No token, authorization denied"
+            }
+
++ Response 400 (application/json) | Token does not match
+
+            {
+                "msg": "Invalid token"
+            }
+
++ Response 400 (application/json) | Todo name kosong
+
+            {
+                "msg": "Nama todo tidak boleh kosong"
+            }

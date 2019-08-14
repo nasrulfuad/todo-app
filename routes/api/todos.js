@@ -56,7 +56,7 @@ router.delete('/:id', auth, async (req, res) => {
 		return res.status(202).json({ msg: 'Todo berhasil di hapus', data: todoUpdated })
 
 	}catch(err) {
-		return res.send(err)
+		return res.status(400).send(err)
 	}
 })
 
@@ -69,8 +69,11 @@ router.put('/:id', auth, async (req, res) => {
 	// Get id from token in headers
 	const _id = req.user.id
 
+	const { name } = req.body
+	if(!name) return res.status(400).json({ msg: 'Nama todo tidak boleh kosong' })
+
 	try {
-		const todoUpdated = await User.findOneAndUpdate({ _id, 'todos._id': req.params.id }, { $set: { 'todos.$.name': req.body.name } }, { new: true } ).select('-password')
+		const todoUpdated = await User.findOneAndUpdate({ _id, 'todos._id': req.params.id }, { $set: { 'todos.$.name': name } }, { new: true } ).select('-password')
 		return res.status(202).json({ msg: 'Todo berhasil di update', data: todoUpdated })
 
 	}catch(error) {
