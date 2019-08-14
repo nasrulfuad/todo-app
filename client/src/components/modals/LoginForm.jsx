@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import axios from 'axios'
-import { Button, Form, Alert, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Form, Alert, FormGroup, Label, Input } from 'reactstrap'
+import Loader from '../Loader'
 
 export default class LoginForm extends Component {
   constructor(props) {
@@ -9,28 +10,37 @@ export default class LoginForm extends Component {
   		email: '',
   		password: '',
   		error: '',
-  		success: ''
+  		success: '',
+      isLoading: false
   	}
   }
 
   onChange = e => this.setState({[e.target.name]: e.target.value})
 
-  onSubmit = e => {
+  onSubmit = async e => {
     e.preventDefault()
   	const { email, password } = this.state
+
   	if(email === '' || password === '') return this.setState({ error: 'Isi semua kolom akhi' })
 
-	axios.post('/api/auth', { email, password })
-		.then(result => {
-			this.setState({error: '', success: result.data.msg})
-			setTimeout(() => this.props.toggle('dashboard', result.data.token), 2500)
-		})
-		.catch(err => this.setState({error: err.response.data.msg}))
-  }
+    this.setState({isLoading: true})
+  	axios.post('/api/auth', { email, password })
+  		.then(result => {
+  			this.setState({error: '', success: result.data.msg})
+  			setTimeout(() => this.props.toggle('dashboard', result.data.token), 3500)
+  		})
+  		.catch(err => {
+        this.setState({error: err.response.data.msg})
+        setTimeout(() => this.setState({isLoading: false}), 3500)
+      })
+    }
 
   render() {
     return (
       <Fragment>
+      {
+        this.state.isLoading ? <Loader /> : '' 
+      }
       { this.state.error !== '' ? (
 	      <Alert color="danger">
 	      	{ this.state.error }

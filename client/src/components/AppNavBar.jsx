@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import axios from 'axios'
+import Loader from './Loader'
 import {
   Collapse,
   Navbar,
@@ -24,7 +25,8 @@ export default class AppNavbar extends Component {
     this.state = {
       isOpen: false,
       isAuthenticated: false,
-      modal: false
+      modal: false,
+      isLoading: false
     }
     this.toggleModal = this.toggleModal.bind(this);
   }
@@ -66,16 +68,15 @@ export default class AppNavbar extends Component {
       })
   }
 
-  logOut = () => {
+  logOut = async () => {
+    await this.setState({ isAuthenticated: false, modal: false, isLoading: true})
     localStorage.removeItem('token')
-    this.setState({
-      isAuthenticated: false
-    })
   }
 
   render() {
     return (
       <Fragment>
+      { this.state.isLoading ? <Loader /> : '' }
         <Navbar color="light" light expand="md">
           <NavbarBrand href="/">Todo App</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
@@ -99,7 +100,7 @@ export default class AppNavbar extends Component {
                   <NavItem>
                     <NavLink href="#" onClick={this.toggleModal}>Logout</NavLink>
                   </NavItem>
-                  <Modal isOpen={this.state.modal} toggle={this.toggleModal} className={this.props.className}>
+                  <Modal isOpen={this.state.modal} toggle={this.toggleModal} fade={false} className={this.props.className}>
                     <ModalBody>
                       <h3>Anda ingin keluar?</h3>
                     </ModalBody>
