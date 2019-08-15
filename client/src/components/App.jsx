@@ -6,6 +6,16 @@ import AppNavBar from './AppNavBar'
 import Loader from './Loader'
 
 export default class App extends Component {
+
+  onLoad = () => new Promise(resolve => setTimeout(resolve, 2000))
+
+  componentDidMount = () => {
+    this.onLoad().then(() => {
+      // fade out
+      document.getElementById('ipl-progress-indicator').classList.add('available')
+    })
+  }
+
   render() {
     return (
       <Fragment>

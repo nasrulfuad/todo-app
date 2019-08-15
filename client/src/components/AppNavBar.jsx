@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import axios from 'axios'
-import Loader from './Loader'
 import {
   Collapse,
   Navbar,
@@ -25,8 +24,7 @@ export default class AppNavbar extends Component {
     this.state = {
       isOpen: false,
       isAuthenticated: false,
-      modal: false,
-      isLoading: false
+      modal: false
     }
     this.toggleModal = this.toggleModal.bind(this);
   }
@@ -68,15 +66,18 @@ export default class AppNavbar extends Component {
       })
   }
 
-  logOut = async () => {
-    await this.setState({ isAuthenticated: false, modal: false, isLoading: true})
+  logOut = () => {
+    document.getElementById('ipl-progress-indicator').classList.remove('available')
+    setTimeout(() => {
+      document.getElementById('ipl-progress-indicator').classList.add('available')
+      this.setState({ isAuthenticated: false, modal: false, isLoading: true})
+    }, 2500)
     localStorage.removeItem('token')
   }
 
   render() {
     return (
       <Fragment>
-      { this.state.isLoading ? <Loader /> : '' }
         <Navbar color="light" light expand="md">
           <NavbarBrand href="/">Todo App</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
@@ -102,11 +103,11 @@ export default class AppNavbar extends Component {
                   </NavItem>
                   <Modal isOpen={this.state.modal} toggle={this.toggleModal} fade={false} className={this.props.className}>
                     <ModalBody>
-                      <h3>Anda ingin keluar?</h3>
+                      <h4 className="m-0 text-secondary">Anda ingin keluar?</h4>
                     </ModalBody>
-                    <ModalFooter>
-                      <Button color="primary" onClick={this.logOut}>Iya</Button>
-                      <Button color="secondary" onClick={this.toggleModal}>Batal</Button>
+                    <ModalFooter className="py-2">
+                      <Button size="sm" className="w-25" color="primary" onClick={this.logOut}>Iya</Button>
+                      <Button size="sm" className="w-25" color="secondary" onClick={this.toggleModal}>Tidak</Button>
                     </ModalFooter>
                   </Modal>
                 </Fragment>

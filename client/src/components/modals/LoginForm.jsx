@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import axios from 'axios'
 import { Button, Form, Alert, FormGroup, Label, Input } from 'reactstrap'
-import Loader from '../Loader'
 
 export default class LoginForm extends Component {
   constructor(props) {
@@ -9,9 +8,7 @@ export default class LoginForm extends Component {
   	this.state = {
   		email: '',
   		password: '',
-  		error: '',
-  		success: '',
-      isLoading: false
+  		error: ''
   	}
   }
 
@@ -22,33 +19,25 @@ export default class LoginForm extends Component {
   	const { email, password } = this.state
 
   	if(email === '' || password === '') return this.setState({ error: 'Isi semua kolom akhi' })
-
-    this.setState({isLoading: true})
+    document.getElementById('ipl-progress-indicator').classList.remove('available')
   	axios.post('/api/auth', { email, password })
-  		.then(result => {
-  			this.setState({error: '', success: result.data.msg})
-  			setTimeout(() => this.props.toggle('dashboard', result.data.token), 3500)
-  		})
+  		.then(result => 
+        setTimeout(() => {
+          this.props.toggle('dashboard', result.data.token)
+          document.getElementById('ipl-progress-indicator').classList.add('available')
+        }, 2500))
   		.catch(err => {
         this.setState({error: err.response.data.msg})
-        setTimeout(() => this.setState({isLoading: false}), 3500)
+        setTimeout(() => document.getElementById('ipl-progress-indicator').classList.add('available'), 1000)
       })
     }
 
   render() {
     return (
       <Fragment>
-      {
-        this.state.isLoading ? <Loader /> : '' 
-      }
       { this.state.error !== '' ? (
 	      <Alert color="danger">
 	      	{ this.state.error }
-	      </Alert>
-      ) : '' }
-      { this.state.success !== '' ? (
-	      <Alert color="success">
-	      	{ this.state.success }
 	      </Alert>
       ) : '' }
         <Form onSubmit={this.onSubmit}>

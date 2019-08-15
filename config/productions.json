@@ -1,0 +1,4 @@
+{
+	"mongoURI" : "mongodb+srv://nasrul:nasrul087@node-api-bniee.mongodb.net/todo-app?retryWrites=true&w=majority",
+	"jwtSecret" : "_(^%uhjhY^%$56iJYt2oi91hU(*"
+}

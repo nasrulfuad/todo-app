@@ -33,7 +33,7 @@ router.post('/', (req, res) => {
 					jwt.sign(
 						{ id: user.id },
 						config.get('jwtSecret'),
-						{ expiresIn : 10 },
+						{ expiresIn : 3600 },
 						(err, token) => {
 							if(err) throw err
 							return res.status(202).json({ msg: 'Login berhasil akhi, tunngu ya', token, user: { id: user.id, name: user.name, email: user.email } })
