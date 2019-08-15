@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import axios from 'axios'
 import { Button, Form, Alert, FormGroup, Label, Input } from 'reactstrap'
 
 export default class LoginForm extends Component {
@@ -20,16 +19,7 @@ export default class LoginForm extends Component {
 
   	if(email === '' || password === '') return this.setState({ error: 'Isi semua kolom akhi' })
     document.getElementById('ipl-progress-indicator').classList.remove('available')
-  	axios.post('/api/auth', { email, password })
-  		.then(result => 
-        setTimeout(() => {
-          this.props.toggle('dashboard', result.data.token)
-          document.getElementById('ipl-progress-indicator').classList.add('available')
-        }, 2500))
-  		.catch(err => {
-        this.setState({error: err.response.data.msg})
-        setTimeout(() => document.getElementById('ipl-progress-indicator').classList.add('available'), 1000)
-      })
+    setTimeout(() => document.getElementById('ipl-progress-indicator').classList.add('available'), 2000)
     }
 
   render() {

@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import axios from 'axios'
 import { Alert, Button, Form, FormGroup, Label, Input } from 'reactstrap'
 
 export default class RegisterForm extends Component {
@@ -22,17 +21,10 @@ export default class RegisterForm extends Component {
   	const { name, email, password, password2 } = this.state
   	if(name === '' || email === '' || password === '' || password2 === '') return this.setState({ error: 'Isi semua kolom akhi' })
   	if(password !== password2) return this.setState({ error: 'Password tidak sama akhi' })
-
-	axios.post('/api/users', { name, email, password })
-		.then(result => {
-			this.setState({error: '', success: result.data.msg})
-			setTimeout(() => this.props.toggle(), 2500)
-		})
-		.catch(err => this.setState({error: err.response.data.msg}))
   }
 
-  render() {
-    return (
+  render = () =>
+    (
       <Fragment>
       { this.state.error !== '' ? (
 	      <Alert color="danger">
@@ -66,5 +58,4 @@ export default class RegisterForm extends Component {
         </Form>
       </Fragment>
     )
-  }
 }
